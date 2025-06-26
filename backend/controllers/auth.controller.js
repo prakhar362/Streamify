@@ -1,5 +1,6 @@
 import bcrypt from "bcryptjs";
 import User from "../models/user.js";
+import { upsertStreamUser } from "../lib/stream.js";
 import {z} from 'zod';
 import jwt from "jsonwebtoken";
 
@@ -27,11 +28,35 @@ export async function Signup(req,res){
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    await User.create({
+    const newUser= await User.create({
         fullName,
         email,
         password:hashedPassword,
     })
+
+    try {
+      await upsertStreamUser({
+        id: newUser._id.toString(),
+        name: newUser.fullName,
+        image: newUser.profilePic || "",
+      });
+      console.log(`Stream user created for ${newUser.fullName}`);
+    } catch (error) {
+      console.log("Error creating Stream user:", error);
+    }
+
+    const token = jwt.sign({ userId: newUser._id }, process.env.JWT_SECRET_KEY, {
+      expiresIn: "7d",
+    });
+
+    res.cookie("jwt", token, {
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+      httpOnly: true, // prevent XSS attacks,
+      sameSite: "strict", // prevent CSRF attacks
+      secure: process.env.NODE_ENV === "production",
+    });
+
+
     return res.status(200).json({ message: "Signed up" });
         
     } catch (error) {
