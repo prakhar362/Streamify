@@ -7,6 +7,7 @@ import AuthRoutes from './routes/auth.route.js';
 
 const app=express();
 dotenv.config();
+app.use(express.json());
 
 //routes
 app.get('/',(req,res)=>{

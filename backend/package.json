@@ -18,7 +18,8 @@
     "express": "^4.21.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.13.2",
-    "stream-chat": "^8.60.0"
+    "stream-chat": "^8.60.0",
+    "zod": "^3.2.0-beta"
   },
   "devDependencies": {
     "nodemon": "^3.1.9"
