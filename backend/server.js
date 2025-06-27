@@ -1,6 +1,7 @@
 import express from 'express';
 import mongosse from 'mongoose';
 import dotenv from 'dotenv';
+import cookieParser from 'cookie-parser';
 
 //route imports
 import AuthRoutes from './routes/auth.route.js';
@@ -8,6 +9,7 @@ import AuthRoutes from './routes/auth.route.js';
 const app=express();
 dotenv.config();
 app.use(express.json());
+app.use(cookieParser());
 
 //routes
 app.get('/',(req,res)=>{
