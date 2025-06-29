@@ -1,24 +1,31 @@
 import { useState } from 'react'
-
 import './App.css'
+import { BrowserRouter,Routes,Route } from 'react-router-dom'
+import LandingPage from './pages/LandingPage';
+import Login from './pages/Login';
+import Signup from './pages/Signup';
+import Onboarding from './pages/Onboarding';
+import HomePage from './pages/HomePage';
+import CallPage from './pages/CallPage';
+import ChatPage from './pages/ChatPage';
+import Notifications from './pages/Notifications';
 
 function App() {
-
-
   return (
     <>
-    <div data-theme='retro'>
-      <h1 class="text-3xl text-amber-900 font-bold underline">
-    Hello world!
-  </h1>
-  <button className="btn btn-primary">Secondary</button>
-    This div will always use light theme
-    <span data-theme="retro">This span will always use retro theme!</span>
 
-    </div>
+    <Routes>
+      <Route path='/' element={<LandingPage />}/>
+      <Route path='/login' element={<Login />}/>
+      <Route path='/signup' element={<Signup />}/>
+      <Route path='/onboarding' element={<Onboarding />}/>
+      <Route path='/home' element={<HomePage />}/>
+      <Route path='/call' element={<CallPage />}/>
+      <Route path='/chat' element={<ChatPage />}/>
+      <Route path='/notifications' element={<Notifications />}/>
 
-     
-     
+
+    </Routes>
     </>
   )
 }
