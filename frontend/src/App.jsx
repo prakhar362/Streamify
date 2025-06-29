@@ -44,7 +44,7 @@ function App() {
 
       <Route path='/onboarding' element={
             isAuthenticated ? (
-              !isOnboarded ? ( <Onboarding /> ) : (  <Navigate to="/" /> )
+              !isOnboarded ? ( <Onboarding /> ) : (  <Navigate to="/home" /> )
             ) : 
               ( <Navigate to="/login" /> )
           }
