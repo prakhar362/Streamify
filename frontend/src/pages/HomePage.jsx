@@ -133,7 +133,7 @@ const HomePage = () => {
                         </span>
                       </div>
 
-                      {user.bio && <p className="text-sm opacity-70">{user.bio}</p>}
+                      {user.bio && <p className="text-md opacity-70">{user.bio}</p>}
 
                       {/* Action button */}
                       <button
