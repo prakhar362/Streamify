@@ -22,7 +22,7 @@ const Navbar = ({ onSidebarToggle, isSidebarOpen }) => {
       <div className={`container mx-auto px-4 sm:px-6 lg:px-8 relative flex items-center h-full ${!isSidebarOpen ? 'pl-0 ml-1' : ''}`}>
         {/* Sidebar toggle button: absolute left when sidebar is collapsed, normal when open */}
         <button
-          className={`btn btn-ghost btn-circle mr-2 transition-all duration-200 ${!isSidebarOpen ? 'absolute left-2   z-20' : ''}`}
+          className={`btn btn-ghost btn-circle mr-2 transition-all duration-200 ${!isSidebarOpen ? 'absolute left-2 z-20' : ''}`}
           onClick={onSidebarToggle}
           aria-label="Toggle sidebar"
         >
@@ -55,42 +55,42 @@ const Navbar = ({ onSidebarToggle, isSidebarOpen }) => {
           </div>
 
           {/* RIGHT SIDE ACTIONS */}
-          <div className="flex items-center gap-2 sm:gap-3">
-            {/* NOTIFICATIONS */}
-            <Link to={"/notifications"}>
-              <button className="btn btn-ghost btn-circle relative hover:bg-primary/10 transition-colors duration-200 group">
-                <BellIcon className="h-5 w-5 text-base-content/70 group-hover:text-primary transition-colors duration-200" />
-                {/* Notification badge */}
-                <span className="absolute -top-1 -right-1 size-2 bg-error rounded-full animate-pulse"></span>
-              </button>
-            </Link>
+          <div className="flex-1 flex justify-end">
+            <div className="flex items-center gap-2 sm:gap-3 w-full justify-end md:justify-end lg:justify-end">
+              {/* NOTIFICATIONS */}
+              <Link to={"/notifications"}>
+                <button className="btn btn-ghost btn-circle relative hover:bg-primary/10 transition-colors duration-200 group">
+                  <BellIcon className="h-5 w-5 text-base-content/70 group-hover:text-primary transition-colors duration-200" />
+                  {/* Notification badge */}
+                  <span className="absolute -top-1 -right-1 size-2 bg-error rounded-full animate-pulse"></span>
+                </button>
+              </Link>
 
-            {/* THEME SELECTOR */}
-            <ThemeSelector />
+              {/* THEME SELECTOR */}
+              <ThemeSelector />
 
-            {/* USER PROFILE */}
-            <div className="flex items-center gap-3">
-              <div className="avatar online">
-                <div className="w-9 h-9 rounded-full ring-2 ring-primary/20 hover:ring-primary/40 transition-all duration-200 cursor-pointer">
-                  <img 
-                    src={authUser?.profilePic || "https://via.placeholder.com/36x36"} 
-                    alt="User Avatar" 
-                    className="object-cover"
-                  />
+              {/* USER PROFILE */}
+              <div className="flex items-center gap-3">
+                <div className="avatar online">
+                  <div className="w-9 h-9 rounded-full ring-2 ring-primary/20 hover:ring-primary/40 transition-all duration-200 cursor-pointer">
+                    <img 
+                      src={authUser?.profilePic || "https://via.placeholder.com/36x36"} 
+                      alt="User Avatar" 
+                      className="object-cover"
+                    />
+                  </div>
                 </div>
               </div>
 
-              
+              {/* LOGOUT BUTTON */}
+              <button 
+                className="btn btn-ghost btn-circle hover:bg-error/10 hover:text-error transition-all duration-200 group" 
+                onClick={logoutMutation}
+                title="Logout"
+              >
+                <LogOutIcon className="h-5 w-5 group-hover:scale-110 transition-transform duration-200" />
+              </button>
             </div>
-
-            {/* LOGOUT BUTTON */}
-            <button 
-              className="btn btn-ghost btn-circle hover:bg-error/10 hover:text-error transition-all duration-200 group" 
-              onClick={logoutMutation}
-              title="Logout"
-            >
-              <LogOutIcon className="h-5 w-5 group-hover:scale-110 transition-transform duration-200" />
-            </button>
           </div>
         </div>
       </div>
