@@ -4,7 +4,7 @@ import { BellIcon, LogOutIcon, ShipWheelIcon, SearchIcon, PanelRight } from "luc
 import ThemeSelector from "./ThemeSelector";
 import useLogout from "../hooks/useLogout";
 
-const Navbar = ({ onSidebarToggle, isSidebarOpen }) => {
+const Navbar = ({ onSidebarToggle, isSidebarOpen,showSidebar }) => {
   const { authUser } = useAuthUser();
   const location = useLocation();
   const isChatPage = location.pathname?.startsWith("/chat");
@@ -20,6 +20,7 @@ const Navbar = ({ onSidebarToggle, isSidebarOpen }) => {
   return (
     <nav className="bg-base-100/80 backdrop-blur-lg border-b border-base-300 sticky top-0 z-30 h-16 flex items-center shadow-sm">
       <div className={`container mx-auto px-4 sm:px-6 lg:px-8 relative flex items-center h-full ${!isSidebarOpen ? 'pl-0 ml-1' : ''}`}>
+    
         {/* Sidebar toggle button: absolute left when sidebar is collapsed, normal when open */}
         <button
           className={`btn btn-ghost btn-circle mr-2 transition-all duration-200 ${!isSidebarOpen ? 'absolute left-2 z-20' : ''}`}

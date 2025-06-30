@@ -19,7 +19,7 @@ const Layout = ({ children, showSidebar = true }) => {
         )}
 
         <div className="flex-1 flex flex-col">
-          <Navbar onSidebarToggle={handleSidebarToggle} isSidebarOpen={isSidebarOpen} />
+          <Navbar onSidebarToggle={handleSidebarToggle} isSidebarOpen={isSidebarOpen} showSidebar={showSidebar} />
 
           <main className="flex-1 overflow-y-auto">{children}</main>
         </div>
