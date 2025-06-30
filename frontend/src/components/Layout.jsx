@@ -10,7 +10,7 @@ const Layout = ({ children, showSidebar = true }) => {
 
   return (
     <div className="min-h-screen">
-      <div className="flex">
+      <div className="flex h-screen overflow-hidden">
         {showSidebar && (
           <Sidebar 
             isOpen={isSidebarOpen} 
