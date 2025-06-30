@@ -100,7 +100,7 @@ const Sidebar = ({ isOpen, onClose }) => {
             </div>
             {isOpen && (
               <div className="flex-1 min-w-0">
-                <p className="font-semibold text-sm text-base-content truncate">{authUser?.fullName}</p>
+                <p className="font-semibold -ml-12 text-sm text-base-content truncate">{authUser?.fullName}</p>
                 <p className="text-xs text-success flex items-center gap-1">
                   <span className="size-1.5 rounded-full bg-success animate-pulse" />
                   Online
