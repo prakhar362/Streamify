@@ -103,7 +103,10 @@ function App() {
           
       <Route path='/chat/:id'  element={
             isAuthenticated && isOnboarded ? (
-                <ChatPage /> ) : (
+              <Layout showSidebar={false}>
+                <ChatPage />
+              </Layout>
+                 ) : (
               <Navigate to={!isAuthenticated ? "/login" : "/onboarding"} />
             )
           }/>
