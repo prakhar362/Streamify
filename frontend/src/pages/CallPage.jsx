@@ -100,7 +100,7 @@ const CallContent = () => {
 
   const navigate = useNavigate();
 
-  if (callingState === CallingState.LEFT) return navigate("/");
+  if (callingState === CallingState.LEFT) return navigate("/home");
 
   return (
     <StreamTheme>
