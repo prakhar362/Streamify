@@ -20,21 +20,23 @@ const Navbar = ({ onSidebarToggle, isSidebarOpen,showSidebar }) => {
   return (
     <nav className="bg-base-100/80 backdrop-blur-lg border-b border-base-300 sticky top-0 z-30 h-16 flex items-center shadow-sm">
       <div className={`container mx-auto px-4 sm:px-6 lg:px-8 relative flex items-center h-full ${!isSidebarOpen ? 'pl-0 ml-1' : ''}`}>
-    
         {/* Sidebar toggle button: absolute left when sidebar is collapsed, normal when open */}
-        <button
-          className={`btn btn-ghost btn-circle mr-2 transition-all duration-200 ${!isSidebarOpen ? 'absolute left-2 z-20' : ''}`}
-          onClick={onSidebarToggle}
-          aria-label="Toggle sidebar"
-        >
-          <PanelRight className="h-5 w-5" />
-        </button>
+        {showSidebar && (
+          <button
+            className={`btn btn-ghost btn-circle mr-2 transition-all duration-200 ${!isSidebarOpen ? 'absolute left-2 z-20' : ''}`}
+            onClick={onSidebarToggle}
+            aria-label="Toggle sidebar"
+          >
+            <PanelRight className="h-5 w-5" />
+          </button>
+        )}
+        
 
         <div className={`flex items-center justify-between w-full ${!isSidebarOpen ? 'pl-12' : ''}`}>
           {/* LOGO - ONLY IN THE CHAT PAGE */}
           {isChatPage && (
             <div className="flex items-center">
-              <Link to="/" className="flex items-center gap-2.5 hover:scale-105 transition-transform duration-200">
+              <Link to="/home" className="flex items-center gap-2.5 hover:scale-105 transition-transform duration-200">
                 <ShipWheelIcon className="size-8 text-primary drop-shadow-sm" />
                 <span className="text-2xl font-bold font-mono bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary tracking-wider">
                   Streamify

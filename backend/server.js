@@ -28,7 +28,7 @@ app.get('/',(req,res)=>{
 
 app.use("/api/v1/auth",AuthRoutes);
 app.use("/api/v1/user",UserRoutes);
-app.use("/api/chat", chatRoutes);
+app.use("/api/v1/chat", chatRoutes);
 
 //running:
 const port=process.env.PORT;
