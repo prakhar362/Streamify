@@ -8,6 +8,7 @@ import cors from "cors";
 import AuthRoutes from './routes/auth.route.js';
 import UserRoutes from './routes/user.route.js';
 import chatRoutes from './routes/chat.route.js';
+import GroupRoutes from './routes/group.route.js';
 
 const app=express();
 dotenv.config();
@@ -29,6 +30,7 @@ app.get('/',(req,res)=>{
 app.use("/api/v1/auth",AuthRoutes);
 app.use("/api/v1/user",UserRoutes);
 app.use("/api/v1/chat", chatRoutes);
+app.use("/api/v1/group",GroupRoutes);
 
 //running:
 const port=process.env.PORT;

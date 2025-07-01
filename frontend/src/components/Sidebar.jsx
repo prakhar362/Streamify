@@ -14,7 +14,7 @@ const Sidebar = ({ isOpen, onClose }) => {
       label: "Home",
     },
     {
-      path: "/friends",
+      path: "/groups",
       icon: UsersIcon,
       label: "Friends",
     },

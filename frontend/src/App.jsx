@@ -80,12 +80,12 @@ function App() {
             )
         }/>
 
-      <Route path='/friends' element={
+      <Route path='/groups' element={
         isAuthenticated && isOnboarded ? (
           <Layout>
             <div className="p-6">
-              <h1 className="text-2xl font-bold mb-4">Friends</h1>
-              <p className="text-base-content/70">Friends page coming soon...</p>
+              <h1 className="text-2xl font-bold mb-4">Groups</h1>
+              <p className="text-base-content/70">Groups page coming soon...</p>
             </div>
           </Layout>
         ) : (
