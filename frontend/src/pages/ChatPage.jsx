@@ -83,7 +83,8 @@ const ChatPage = () => {
   const handleVideoCall = () => {
     if (channel) {
       const callUrl = `${window.location.origin}/call/${channel.id}`;
-
+      console.log("Button clicked");
+  
       channel.sendMessage({
         text: `I've started a video call. Join me here: ${callUrl}`,
       });
@@ -95,17 +96,23 @@ const ChatPage = () => {
   if (loading || !chatClient || !channel) return <ChatLoader />;
 
   return (
-    <div className="h-[93vh]">
+    <div className="h-screen bg-gray-100">
       <Chat client={chatClient}>
         <Channel channel={channel}>
-          <div className="w-full relative">
-            <CallButton handleVideoCall={handleVideoCall} />
-            <Window>
-              <ChannelHeader />
-              <MessageList />
-              <MessageInput focus />
-            </Window>
-          </div>
+          <Window>
+            <div className="flex flex-col h-full">
+              <div className="flex items-center justify-between px-4 py-3 border-b border-gray-200 bg-white">
+                <div className="flex items-center">
+                  <ChannelHeader />
+                </div>
+                <div className="flex items-center gap-2">
+                  <CallButton onClick={handleVideoCall} />
+                </div>
+              </div>
+              <MessageList className="flex-1 overflow-y-auto" />
+              <MessageInput />
+            </div>
+          </Window>
           <Thread />
         </Channel>
       </Chat>

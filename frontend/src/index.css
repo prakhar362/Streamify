@@ -2,3 +2,132 @@
 @plugin "daisyui" {
   themes: all;
 }
+.str-chat__channel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(to bottom, #c9e8c9, #b7e7bb);
+  height: 100%;
+}
+
+.str-chat__container {
+  max-width: 1200px;
+  width: 110% !important;
+  height: 80% !important;
+  margin: 0 auto !important;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+}
+
+.str-chat__list {
+  background-color: #ffffff;
+  padding: 12px;
+}
+
+.str-chat__list-notifications {
+  display: none;
+  text-align: center;
+}
+
+.str-chat__message-input {
+  border-top: 1px solid #ddd;
+}
+
+.str-chat__channel-header, .str-chat__header-livestream {
+  background: #ffffff !important;
+  border-bottom: 1px solid #ffffff !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  padding: 0.75rem 1.5rem !important;
+  display: flex;
+  align-items: flex-start;
+  min-height: 64px;
+  position: relative;
+}
+
+.str-chat__channel-header .str-chat__avatar {
+  margin-right: 0.75rem;
+}
+
+.str-chat__channel-header .str-chat__header-details {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.str-chat__channel-header .str-chat__header-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #2d3748;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.str-chat__channel-header .str-chat__header-subtitle {
+  font-size: 0.85rem;
+  color: #718096;
+  font-weight: 400;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 2px;
+}
+
+/* Online status dot */
+.str-chat__header-subtitle::before {
+  content: '';
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  background-color: #48bb78;
+  border-radius: 50%;
+  margin-right: 4px;
+}
+
+.str-chat__channel-header .str-chat__header-buttons {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.str-chat__channel-header .str-chat__header-buttons button {
+  background: #edf2f7 !important;
+  color: #4a5568 !important;
+  border-radius: 8px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  transition: all 0.2s;
+  box-shadow: none !important;
+}
+
+.str-chat__channel-header .str-chat__header-buttons button:hover {
+  background: #e2e8f0 !important;
+  color: #2d3748 !important;
+}
+
+/* Add margin to the first button */
+.str-chat__channel-header .str-chat__header-buttons button:first-child {
+  margin-right: 4px;
+}
+
+@media (max-width: 900px) {
+  .str-chat__channel-header, .str-chat__header-livestream {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    padding: 0.75rem 1rem !important;
+    min-height: 60px;
+  }
+  
+  .str-chat__channel-header .str-chat__header-buttons button {
+    width: 36px;
+    height: 36px;
+  }
+}
