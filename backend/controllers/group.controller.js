@@ -88,8 +88,13 @@ export async function getMyGroups(req, res) {
 
 export async function sendGroupRequest(req, res) {
   try {
-    const groupId = req.params.id;
-    const senderId = req.user._id;
+    const { groupId } = req.body;
+    const receiverId = req.params.id;
+    const myId = req.user._id;
+
+    if (!groupId) {
+      return res.status(400).json({ success: false, message: 'Group ID is required' });
+    }
 
     const group = await Group.findById(groupId);
 
@@ -97,24 +102,30 @@ export async function sendGroupRequest(req, res) {
       return res.status(404).json({ success: false, message: 'Group not found' });
     }
 
-    if (group.members.includes(senderId)) {
-      return res.status(400).json({ success: false, message: 'Already a member' });
+    if (myId===receiverId) {
+      return res.status(400).json({ success: false, message: 'You cannot send request to yourself' });
+    }
+
+
+    if (group.members.includes(receiverId)) {
+      return res.status(400).json({ success: false, message: 'Receiver is already a member of this group' });
     }
 
     const existing = await GroupRequest.findOne({
       group: groupId,
-      sender: senderId,
+      sender: myId,
+      recipient: receiverId,
       status: 'pending'
     });
 
     if (existing) {
-      return res.status(400).json({ success: false, message: 'Request already sent' });
+      return res.status(400).json({ success: false, message: 'Request already sent to this user' });
     }
 
     const request = new GroupRequest({
       group: groupId,
-      sender: senderId,
-      recipient: group.createdBy,
+      sender: myId,
+      recipient: receiverId,
       status: 'pending'
     });
 
@@ -137,18 +148,20 @@ export async function sendGroupRequest(req, res) {
 
 export async function acceptGroupRequest(req, res) {
   try {
-    const requestId = req.params.id;
-    const adminId = req.user._id;
+    const requestId = req.params.id; // requestId is the  group request model id
+    const userId = req.user._id;
+    console.log("Reciver sending its Id: ",userId);
 
     const request = await GroupRequest.findById(requestId)
       .populate('group')
-      .populate('sender');
+      .populate('recipient');
+    console.log("From Request reviver Id is: ", request.recipient._id );
 
     if (!request) {
       return res.status(404).json({ success: false, message: 'Request not found' });
     }
 
-    if (request.recipient.toString() !== adminId.toString()) {
+    if (request.recipient._id.toString() !== userId.toString()) {
       return res.status(403).json({ success: false, message: 'Not authorized' });
     }
 
@@ -156,18 +169,20 @@ export async function acceptGroupRequest(req, res) {
     await request.save();
 
     const group = await Group.findById(request.group._id);
-    if (!group.members.includes(request.sender._id)) {
-      group.members.push(request.sender._id);
+
+    // Add member to group Model array if not already a member
+    if (!group.members.includes(request.recipient._id)) {
+      group.members.push(request.recipient._id);
       await group.save();
     }
 
     // Add member to stream channel
     const channel = serverClient.channel('messaging', `group_${group._id}`);
-    await channel.addMembers([request.sender._id.toString()]);
+    await channel.addMembers([request.recipient._id.toString()]);
 
     res.status(200).json({
       success: true,
-      message: 'User added to group',
+      message: `User ${userId}  added to group`,
       group
     });
   } catch (error) {

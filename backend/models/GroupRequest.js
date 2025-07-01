@@ -21,11 +21,7 @@ const groupRequestSchema = new mongoose.Schema(
       type: String,
       enum: ["pending", "accepted", "rejected"],
       default: "pending",
-    },
-    message: {
-      type: String,
-      default: "",
-    },
+    }
   },
   {
     timestamps: true,

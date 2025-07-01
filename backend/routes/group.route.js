@@ -17,7 +17,7 @@ router.post("/create",createGroup);
 router.get("/", getMyGroups);
 
 router.post("/group-request/:id", sendGroupRequest);
-router.put("/group-request/:id/accept", acceptGroupRequest);
+router.post("/group-request/:id/accept", acceptGroupRequest);
 
 router.get("/group-requests", getGroupRequests);
 router.get("/outgoing-group-requests", getOutgoingGroupReqs);
