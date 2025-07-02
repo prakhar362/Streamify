@@ -64,3 +64,34 @@ export async function getStreamToken() {
   const response = await axiosInstance.get("/chat/token");
   return response.data;
 }
+
+// Group-related API functions
+export async function getMyGroups() {
+  const response = await axiosInstance.get("/group");
+  return response.data.groups;
+}
+
+export async function createGroup(groupData) {
+  const response = await axiosInstance.post("/group/create", groupData);
+  return response.data;
+}
+
+export async function sendGroupRequest(userId, groupId) {
+  const response = await axiosInstance.post(`/group/group-request/${userId}`, { groupId });
+  return response.data;
+}
+
+export async function acceptGroupRequest(requestId) {
+  const response = await axiosInstance.post(`/group/group-request/${requestId}/accept`);
+  return response.data;
+}
+
+export async function getGroupRequests() {
+  const response = await axiosInstance.get("/group/group-requests");
+  return response.data.requests;
+}
+
+export async function getOutgoingGroupRequests() {
+  const response = await axiosInstance.get("/group/outgoing-group-requests");
+  return response.data.requests;
+}

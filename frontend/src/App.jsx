@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import './App.css'
-import { Routes, Route, Navigate } from 'react-router-dom'
+import { Routes,Route, Navigate } from 'react-router-dom'
 import { Toaster } from "react-hot-toast";
 
 
@@ -12,30 +12,27 @@ import HomePage from './pages/HomePage';
 import CallPage from './pages/CallPage';
 import ChatPage from './pages/ChatPage';
 import Notifications from './pages/Notifications';
+import GroupPage from './pages/GroupPage';
+import GroupRequests from './pages/GroupRequests';
 
 import PageLoader from "./components/PageLoader.jsx";
 import useAuthUser from "./hooks/useAuthUser.js";
-import Layout from './components/Layout.jsx';
+import Layout from "./components/Layout.jsx";
 import { useThemeStore } from './store/useThemeStore.js';
 
 function App() {
   const { isLoading, authUser } = useAuthUser();
   const { theme } = useThemeStore();
 
+  const isAuthenticated = Boolean(authUser);
+  const isOnboarded = authUser?.isOnboarded;
+
   // Apply theme to document
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
   }, [theme]);
 
-  const isAuthenticated = Boolean(authUser);
-  const isOnboarded = authUser?.isOnboarded;
-
-  // Don't show loader for landing page since it doesn't need auth
-  const currentPath = window.location.pathname;
-  const isLandingPage = currentPath === '/';
-  
-  if (isLoading && !isLandingPage) return <PageLoader />;
-  
+   if (isLoading) return <PageLoader />;
   return (
     <>
     <Toaster 
@@ -63,7 +60,7 @@ function App() {
 
       <Route path='/onboarding' element={
             isAuthenticated ? (
-              !isOnboarded ? ( <Onboarding /> ) : (  <Navigate to="/home" /> )
+              !isOnboarded ? ( <Onboarding /> ) : (  <Navigate to="/" /> )
             ) : 
               ( <Navigate to="/login" /> )
           }
@@ -73,29 +70,19 @@ function App() {
       <Route path='/home' element={
         isAuthenticated && isOnboarded ? (
           <Layout>
-          <HomePage />
-          </Layout> 
+            <HomePage />
+          </Layout>
         ) : (
               <Navigate to={!isAuthenticated ? "/login" : "/onboarding"} />
             )
         }/>
 
-      <Route path='/groups' element={
-        isAuthenticated && isOnboarded ? (
-          <Layout>
-            <div className="p-6">
-              <h1 className="text-2xl font-bold mb-4">Groups</h1>
-              <p className="text-base-content/70">Groups page coming soon...</p>
-            </div>
-          </Layout>
-        ) : (
-          <Navigate to={!isAuthenticated ? "/login" : "/onboarding"} />
-        )
-      }/>
-
       <Route path='/call/:id'  element={
             isAuthenticated && isOnboarded ? (
-              <CallPage /> ) : (
+              <Layout showSidebar={false}>
+                <CallPage />
+              </Layout>
+            ) : (
               <Navigate to={!isAuthenticated ? "/login" : "/onboarding"} />
             )
           }/>
@@ -106,7 +93,7 @@ function App() {
               <Layout showSidebar={false}>
                 <ChatPage />
               </Layout>
-                 ) : (
+            ) : (
               <Navigate to={!isAuthenticated ? "/login" : "/onboarding"} />
             )
           }/>
@@ -116,7 +103,29 @@ function App() {
               <Layout>
                 <Notifications />
               </Layout>
-                 ) : (
+            ) : (
+              <Navigate to={!isAuthenticated ? "/login" : "/onboarding"} />
+            )
+          }
+          />
+
+      <Route path='/groups' element={
+            isAuthenticated && isOnboarded ? (
+              <Layout>
+                <GroupPage />
+              </Layout>
+            ) : (
+              <Navigate to={!isAuthenticated ? "/login" : "/onboarding"} />
+            )
+          }
+          />
+
+      <Route path='/group-requests' element={
+            isAuthenticated && isOnboarded ? (
+              <Layout>
+                <GroupRequests />
+              </Layout>
+            ) : (
               <Navigate to={!isAuthenticated ? "/login" : "/onboarding"} />
             )
           }

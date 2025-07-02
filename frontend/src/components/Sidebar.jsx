@@ -16,7 +16,7 @@ const Sidebar = ({ isOpen, onClose }) => {
     {
       path: "/groups",
       icon: UsersIcon,
-      label: "Friends",
+      label: "Groups",
     },
     {
       path: "/notifications",
