@@ -1,10 +1,11 @@
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState, useEffect } from "react";
 import {
   getMyGroups,
   getUserFriends,
   sendGroupRequest,
+  getStreamToken,
 } from "../lib/api";
 import {
   UsersIcon,
@@ -12,7 +13,18 @@ import {
   UserPlusIcon,
   CheckCircleIcon,
   XIcon,
+  PaperclipIcon,
+  PaperPlaneIcon,
+  SmileIcon,
 } from "lucide-react";
+import { StreamChat } from "stream-chat";
+import { StreamVideoClient } from "@stream-io/video-react-sdk";
+import useAuthUser from "../hooks/useAuthUser";
+import toast from "react-hot-toast";
+import { Chat, Channel, ChannelHeader, MessageList, MessageInput, Thread } from "stream-chat-react";
+import "stream-chat-react/dist/css/v2/index.css";
+
+const STREAM_API_KEY = import.meta.env.VITE_STREAM_API_KEY;
 
 const GroupDetailPage = () => {
   const { id: groupId } = useParams();
@@ -21,6 +33,101 @@ const GroupDetailPage = () => {
   const [eligibleFriends, setEligibleFriends] = useState([]);
   const [sentRequests, setSentRequests] = useState(new Set());
   const [showAddModal, setShowAddModal] = useState(false);
+  const [chatClient, setChatClient] = useState(null);
+  const [channel, setChannel] = useState(null);
+  const [message, setMessage] = useState("");
+  const [videoClient, setVideoClient] = useState(null);
+  const { authUser } = useAuthUser();
+  const navigate = useNavigate();
+
+  const { data: tokenData } = useQuery({
+    queryKey: ["streamToken"],
+    queryFn: getStreamToken,
+    enabled: !!authUser,
+  });
+
+  // Initialize chat client and channel
+  useEffect(() => {
+    const initChat = async () => {
+      if (!tokenData?.token || !authUser || !group) return;
+
+      try {
+        // Initialize Stream Chat
+        const client = StreamChat.getInstance(STREAM_API_KEY);
+        await client.connectUser(
+          {
+            id: authUser._id,
+            name: authUser.fullName,
+            image: authUser.profilePic,
+          },
+          tokenData.token
+        );
+
+        // Initialize Stream Video Client
+        const videoClient = new StreamVideoClient({
+          apiKey: STREAM_API_KEY,
+          user: {
+            id: authUser._id,
+            name: authUser.fullName,
+            image: authUser.profilePic,
+          },
+          token: tokenData.token,
+        });
+        setVideoClient(videoClient);
+
+        // Set up chat channel
+        const channelId = `group-${group._id}`;
+        const channel = client.channel("messaging", channelId, {
+          name: group.groupName,
+          members: group.members.map(m => m._id),
+          image: group.profilePic,
+        });
+
+        await channel.watch();
+        setChatClient(client);
+        setChannel(channel);
+      } catch (error) {
+        console.error("Error initializing chat:", error);
+        toast.error("Could not connect to chat. Please try again.");
+      }
+    };
+
+    if (group?.members?.length > 0) {
+      initChat();
+    }
+
+    return () => {
+      if (chatClient) {
+        chatClient.disconnectUser();
+      }
+      if (videoClient) {
+        videoClient.disconnectUser();
+      }
+    };
+  }, [tokenData, authUser, group?._id]);
+
+  const handleVideoCall = async () => {
+    if (!videoClient || !group) return;
+    
+    try {
+      // Create a unique call ID for this group
+      const callId = `group-call-${group._id}-${Date.now()}`;
+      
+      // Navigate to the call page
+      navigate(`/call/${callId}`);
+      
+      // Optionally, you can send a message to the group chat about the call
+      if (channel) {
+        const callUrl = `${window.location.origin}/call/${callId}`;
+        await channel.sendMessage({
+          text: `I've started a video call. Join me here: ${callUrl}`,
+        });
+      }
+    } catch (error) {
+      console.error("Error starting video call:", error);
+      toast.error("Could not start video call. Please try again.");
+    }
+  };
 
   const { data: groups = [], isLoading: loadingGroups } = useQuery({
     queryKey: ["groups"],
@@ -126,9 +233,66 @@ const GroupDetailPage = () => {
         )}
       </div>
 
-      {/* Main content area (could be chat/messages in future) */}
-      <div className="w-full max-w-3xl flex-1 px-4 py-8">
-        {/* You can add group chat/messages here if needed */}
+      {/* Chat Interface */}
+      <div className="w-full max-w-3xl flex-1 flex flex-col bg-base-100">
+        {!channel ? (
+          <div className="flex-1 flex items-center justify-center">
+            <div className="text-center p-4">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+              <p className="text-muted-foreground">Loading chat...</p>
+            </div>
+          </div>
+        ) : (
+          <Chat client={chatClient} theme="str-chat__theme-light">
+            <Channel 
+              channel={channel}
+              Input={MessageInput}
+              LoadingIndicator={() => (
+                <div className="flex-1 flex items-center justify-center">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+                </div>
+              )}
+            >
+              <div className="flex flex-col h-full">
+                {/* Channel Header */}
+                <div className="flex items-center justify-between p-4 border-b">
+                  <div className="flex items-center gap-3">
+                    <div className="avatar">
+                      <div className="w-10 h-10 rounded-full bg-primary text-primary-content flex items-center justify-center">
+                        <UsersIcon className="w-5 h-5" />
+                      </div>
+                    </div>
+                    <div>
+                      <h3 className="font-semibold">{group.groupName}</h3>
+                      <p className="text-xs text-muted-foreground">
+                        {group.members.length} members • {onlineCount} online
+                      </p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={handleVideoCall}
+                    className="btn btn-ghost btn-circle"
+                    title="Start Video Call"
+                    disabled={!videoClient}
+                  >
+                    <VideoIcon className="w-5 h-5" />
+                  </button>
+                </div>
+
+                {/* Messages */}
+                <div className="flex-1 overflow-y-auto">
+                  <MessageList />
+                </div>
+
+                {/* Message Input */}
+                <div className="p-4 border-t">
+                  <MessageInput />
+                </div>
+              </div>
+              <Thread />
+            </Channel>
+          </Chat>
+        )}
       </div>
 
       {/* Add User Modal */}
