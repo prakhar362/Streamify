@@ -14,6 +14,7 @@ import ChatPage from './pages/ChatPage';
 import Notifications from './pages/Notifications';
 import GroupPage from './pages/GroupPage';
 import GroupRequests from './pages/GroupRequests';
+import GroupDetailPage from './pages/GroupDetailPage';
 
 import PageLoader from "./components/PageLoader.jsx";
 import useAuthUser from "./hooks/useAuthUser.js";
@@ -130,6 +131,16 @@ function App() {
             )
           }
           />
+
+      <Route path='/group/:id' element={
+        isAuthenticated && isOnboarded ? (
+          <Layout>
+            <GroupDetailPage />
+          </Layout>
+        ) : (
+          <Navigate to={!isAuthenticated ? "/login" : "/onboarding"} />
+        )
+      }/>
     </Routes>
     </>
   )
