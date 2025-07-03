@@ -1,11 +1,15 @@
-import React from 'react'
-
+import { HeroSection } from "../components/ui/hero-section-9";
+import { FeaturesSectionWithHoverEffects } from "../components/ui/FeaturesSectionWithHoverEffects";
 function LandingPage() {
   return (
-    <div>
-      Landing Page will come here!
+    <>
+    <div className="bg-white">
+       <HeroSection />
+     <FeaturesSectionWithHoverEffects/>
     </div>
-  )
-}
+     
 
-export default LandingPage
+    </>
+  );
+}
+export default LandingPage;

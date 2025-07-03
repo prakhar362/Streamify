@@ -20,18 +20,23 @@ import PageLoader from "./components/PageLoader.jsx";
 import useAuthUser from "./hooks/useAuthUser.js";
 import Layout from "./components/Layout.jsx";
 import { useThemeStore } from './store/useThemeStore.js';
+import { useLocation } from "react-router-dom";
 
 function App() {
   const { isLoading, authUser } = useAuthUser();
   const { theme } = useThemeStore();
-
+   const { pathname } = useLocation();
   const isAuthenticated = Boolean(authUser);
   const isOnboarded = authUser?.isOnboarded;
 
   // Apply theme to document
   useEffect(() => {
+    if (pathname === "/" || pathname === "/landing") {
+      document.documentElement.setAttribute('data-theme','none');
+    }
+
     document.documentElement.setAttribute('data-theme', theme);
-  }, [theme]);
+  }, [theme,pathname]);
 
    if (isLoading) return <PageLoader />;
   return (
