@@ -6,15 +6,18 @@ import {
   getUserFriends,
   getOutgoingFriendReqs,
   sendFriendRequest,
+  createGroup,
 } from "../lib/api";
 import { Link } from "react-router";
-import { CheckCircleIcon, MapPinIcon, UserPlusIcon, UsersIcon, PlusIcon } from "lucide-react";
+import { CheckCircleIcon, MapPinIcon, UserPlusIcon, UsersIcon, PlusIcon, CameraIcon, ShuffleIcon } from "lucide-react";
+import { toast } from "react-hot-toast";
 
 import { capitialize } from "../lib/utils";
 
 import FriendCard, { getLanguageFlag } from "../components/FriendCard";
 import GroupCard from "../components/GroupCard";
 import NoGroupFound from "../components/NoGroupFound";
+import useAuthUser from "../hooks/useAuthUser";
 
 const GroupPage = () => {
   const queryClient = useQueryClient();
@@ -45,6 +48,17 @@ const GroupPage = () => {
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["outgoingFriendReqs"] }),
   });
 
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [formState, setFormState] = useState({
+    groupName: "",
+    desc: "",
+    profilePic: "",
+    learningLanguage: "",
+  });
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const { authUser } = useAuthUser();
+
   useEffect(() => {
     const outgoingIds = new Set();
     if (outgoingFriendReqs && outgoingFriendReqs.length > 0) {
@@ -57,6 +71,37 @@ const GroupPage = () => {
     }
   }, [outgoingFriendReqs]);
 
+  const handleRandomAvatar = () => {
+    const idx = Math.floor(Math.random() * 100) + 1; // 1-100 included
+    const randomAvatar = `https://avatar.iran.liara.run/public/${idx}.png`;
+    setFormState({ ...formState, profilePic: randomAvatar });
+    toast.success("Random profile picture generated!");
+  };
+
+  const handleInputChange = (e) => {
+    setFormState({ ...formState, [e.target.name]: e.target.value });
+  };
+
+  const handleCreateGroup = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError("");
+    try {
+      await createGroup({
+        ...formState,
+        createdBy: authUser?._id,
+        members: [authUser?._id],
+      });
+      setShowCreateModal(false);
+      setFormState({ groupName: "", desc: "", profilePic: "", learningLanguage: "" });
+      queryClient.invalidateQueries({ queryKey: ["groups"] });
+    } catch (err) {
+      setError(err?.response?.data?.message || "Failed to create group");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="p-4 sm:p-6 lg:p-8">
       <div className="container mx-auto space-y-10">
@@ -68,7 +113,7 @@ const GroupPage = () => {
               <UsersIcon className="mr-2 size-4" />
               Group Requests
             </Link>
-            <button className="btn btn-primary btn-sm">
+            <button className="btn btn-primary btn-sm" onClick={() => setShowCreateModal(true)}>
               <PlusIcon className="mr-2 size-4" />
               Create Group
             </button>
@@ -210,6 +255,83 @@ const GroupPage = () => {
             </div>
           )}
         </section>
+
+        {/* Create Group Modal */}
+        {showCreateModal && (
+          <div className="fixed inset-0 z-50 bg-black/40 flex items-center justify-center">
+            <form
+              className="bg-white rounded-xl shadow-lg w-full max-w-md p-6 relative space-y-4"
+              onSubmit={handleCreateGroup}
+            >
+              <button
+                type="button"
+                className="absolute top-3 right-3 text-gray-500 hover:text-black"
+                onClick={() => setShowCreateModal(false)}
+              >
+                ×
+              </button>
+              <h3 className="text-lg font-semibold mb-4">Create New Group</h3>
+              {/* PROFILE PIC CONTAINER */}
+              <div className="flex flex-col items-center justify-center space-y-3">
+                {/* IMAGE PREVIEW */}
+                <div className="size-28 rounded-full border-4 border-[#3498db]/30 shadow-sm bg-[#eaf6fb] overflow-hidden flex items-center justify-center">
+                  {formState.profilePic ? (
+                    <img
+                      src={formState.profilePic}
+                      alt="Profile Preview"
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <div className="flex items-center justify-center h-full">
+                      <CameraIcon className="size-10 text-[#3498db] opacity-40" />
+                    </div>
+                  )}
+                </div>
+                {/* Generate Random Avatar BTN */}
+                <button type="button" onClick={handleRandomAvatar} className="btn btn-sm bg-[#3498db] text-white border-none hover:bg-[#217dbb] flex items-center gap-2">
+                  <ShuffleIcon className="size-4" />
+                  Random Avatar
+                </button>
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">Group Name</label>
+                <input
+                  className="input input-bordered w-full"
+                  name="groupName"
+                  value={formState.groupName}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">Description</label>
+                <textarea
+                  className="textarea textarea-bordered w-full"
+                  name="desc"
+                  value={formState.desc}
+                  onChange={handleInputChange}
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">Learning Language</label>
+                <input
+                  className="input input-bordered w-full"
+                  name="learningLanguage"
+                  value={formState.learningLanguage}
+                  onChange={handleInputChange}
+                />
+              </div>
+              {error && <div className="text-red-500 text-sm">{error}</div>}
+              <button
+                className="btn btn-primary w-full mt-2"
+                type="submit"
+                disabled={loading}
+              >
+                {loading ? "Creating..." : "Create Group"}
+              </button>
+            </form>
+          </div>
+        )}
       </div>
     </div>
   );
