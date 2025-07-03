@@ -1,11 +1,14 @@
 import { useParams, Link } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
   getMyGroups,
   getUserFriends,
   sendGroupRequest,
+  getStreamToken,
 } from "../lib/api";
+import useAuthUser from "../hooks/useAuthUser";
+
 import {
   UsersIcon,
   VideoIcon,
@@ -14,22 +17,48 @@ import {
   XIcon,
 } from "lucide-react";
 
+import {
+  Chat,
+  Channel,
+  Window,
+  ChannelHeader,
+  MessageList,
+  MessageInput,
+} from "stream-chat-react";
+import { StreamChat } from "stream-chat";
+import "stream-chat-react/dist/css/v2/index.css";
+
+const apiKey = import.meta.env.VITE_STREAM_API_KEY;
+
 const GroupDetailPage = () => {
   const { id: groupId } = useParams();
   const queryClient = useQueryClient();
+
   const [group, setGroup] = useState(null);
+  const [chatClient, setChatClient] = useState(null);
+  const [channel, setChannel] = useState(null);
   const [eligibleFriends, setEligibleFriends] = useState([]);
   const [sentRequests, setSentRequests] = useState(new Set());
   const [showAddModal, setShowAddModal] = useState(false);
+
+  const { authUser } = useAuthUser();
+
+  const { data: tokenData } = useQuery({
+    queryKey: ["streamToken"],
+    queryFn: getStreamToken,
+    enabled: !!authUser,
+  });
 
   const { data: groups = [], isLoading: loadingGroups } = useQuery({
     queryKey: ["groups"],
     queryFn: getMyGroups,
   });
+
   const { data: friends = [], isLoading: loadingFriends } = useQuery({
     queryKey: ["friends"],
     queryFn: getUserFriends,
   });
+
   const { mutate: sendRequestMutation, isPending } = useMutation({
     mutationFn: ({ friendId, groupId }) => sendGroupRequest(friendId, groupId),
     onSuccess: (_, variables) => {
@@ -37,6 +66,7 @@ const GroupDetailPage = () => {
     },
   });
 
+  // Find group & eligible friends
   useEffect(() => {
     if (groups && groupId) {
       const found = groups.find((g) => g._id === groupId);
@@ -50,6 +80,43 @@ const GroupDetailPage = () => {
     }
   }, [groups, groupId, friends]);
 
+  // Initialize Stream Chat
+  useEffect(() => {
+    const initChat = async () => {
+      if (!authUser || !tokenData?.token || !group?.streamChannelId) return;
+
+      try {
+        const client = StreamChat.getInstance(apiKey);
+
+        await client.connectUser(
+          {
+            id: authUser._id,
+            name: authUser.fullName,
+            image: authUser.profilePic,
+          },
+          tokenData.token
+        );
+
+        const streamChannel = client.channel("messaging", group.streamChannelId, {
+          name: group.groupName,
+          members: group.members.map((m) => m._id),
+        });
+
+        await streamChannel.watch();
+        setChatClient(client);
+        setChannel(streamChannel);
+      } catch (err) {
+        console.error("Stream Chat init error:", err);
+      }
+    };
+
+    initChat();
+
+    return () => {
+      if (chatClient) chatClient.disconnectUser();
+    };
+  }, [authUser, tokenData, group]);
+
   if (loadingGroups || loadingFriends || !group) {
     return (
       <div className="flex justify-center items-center h-96">
@@ -58,14 +125,15 @@ const GroupDetailPage = () => {
     );
   }
 
-  const onlineCount = group.members.length;
+  if (!chatClient || !channel) {
+    return <div className="text-center p-8">Connecting to chat...</div>;
+  }
 
   return (
     <div className="min-h-screen flex flex-col items-center bg-base-100">
-      {/* Header Bar */}
-      <div className="w-full max-w-3xl px-4 pt-6 pb-2 border-b bg-base-100 sticky top-0 z-10">
+      {/* Header */}
+      <div className="w-full max-w-3xl px-4 pt-6 pb-2 border-b sticky top-0 z-10 bg-white">
         <div className="flex items-center justify-between gap-4">
-          {/* Left: Group avatar and name */}
           <div className="flex items-center gap-4 min-w-0">
             <div className="avatar size-12 rounded-full bg-primary text-primary-content flex items-center justify-center">
               <UsersIcon className="size-6" />
@@ -73,33 +141,11 @@ const GroupDetailPage = () => {
             <div className="min-w-0">
               <h2 className="text-xl font-bold truncate">{group.groupName}</h2>
               <p className="text-xs text-muted-foreground">
-                {group.members.length} members • {onlineCount} online
+                {group.members.length} members • {group.members.length} online
               </p>
             </div>
           </div>
 
-          {/* Center: Members avatars */}
-          <div className="flex items-center gap-2 flex-1 justify-center overflow-x-auto hide-scrollbar">
-            {group.members.map((member) => (
-              <div
-                key={member._id}
-                className="avatar size-9 border-2 border-base-300 hover:border-primary transition-all cursor-pointer group"
-                title={member.username}
-              >
-                <img
-                  src={member.profilePic}
-                  alt={member.username}
-                  className="rounded-full"
-                />
-                {/* Tooltip on hover */}
-                <span className="absolute left-1/2 -translate-x-1/2 mt-10 px-2 py-1 rounded bg-base-200 text-xs text-base-content opacity-0 group-hover:opacity-100 pointer-events-none whitespace-nowrap shadow-lg z-20">
-                  {member.username}
-                </span>
-              </div>
-            ))}
-          </div>
-
-          {/* Right: Action buttons */}
           <div className="flex items-center gap-2">
             <Link
               to={`/call/${group._id}`}
@@ -114,11 +160,10 @@ const GroupDetailPage = () => {
               title="Add User"
             >
               <UserPlusIcon className="size-4" />
-              Add User
+              Add
             </button>
           </div>
         </div>
-        {/* Description below header */}
         {group.desc && (
           <div className="mt-2 text-sm text-muted-foreground truncate">
             {group.desc}
@@ -126,12 +171,20 @@ const GroupDetailPage = () => {
         )}
       </div>
 
-      {/* Main content area (could be chat/messages in future) */}
+      {/* Chat UI */}
       <div className="w-full max-w-3xl flex-1 px-4 py-8">
-        {/* You can add group chat/messages here if needed */}
+        <Chat client={chatClient} theme="messaging light">
+          <Channel channel={channel}>
+            <Window>
+              <ChannelHeader />
+              <MessageList />
+              <MessageInput />
+            </Window>
+          </Channel>
+        </Chat>
       </div>
 
-      {/* Add User Modal */}
+      {/* Add Friends Modal */}
       {showAddModal && (
         <div className="fixed inset-0 z-50 bg-black/40 flex items-center justify-center">
           <div className="bg-white rounded-xl shadow-lg w-full max-w-md p-6 relative">
@@ -162,23 +215,18 @@ const GroupDetailPage = () => {
                           className="rounded-full"
                         />
                       </div>
-                      <div className="flex-1">
-                        <div className="font-semibold">{friend.fullName}</div>
-                      </div>
+                      <div className="flex-1 font-semibold">{friend.fullName}</div>
                       <button
                         className={`btn btn-sm ${alreadySent ? "btn-disabled" : "btn-primary"}`}
                         onClick={() =>
-                          sendRequestMutation({
-                            friendId: friend._id,
-                            groupId: group._id,
-                          })
+                          sendRequestMutation({ friendId: friend._id, groupId: group._id })
                         }
                         disabled={alreadySent || isPending}
                       >
                         {alreadySent ? (
                           <>
                             <CheckCircleIcon className="size-4 mr-1" />
-                            Invite Sent
+                            Sent
                           </>
                         ) : (
                           <>

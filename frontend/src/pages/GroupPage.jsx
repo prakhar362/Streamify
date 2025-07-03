@@ -23,6 +23,7 @@ const GroupPage = () => {
     queryKey: ["groups"],
     queryFn: getMyGroups,
   });
+  console.log("Groups array:",groups);
 
   const { data: friends = [], isLoading: loadingFriends } = useQuery({
     queryKey: ["friends"],
