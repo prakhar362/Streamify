@@ -68,6 +68,7 @@ export async function getStreamToken() {
 // Group-related API functions
 export async function getMyGroups() {
   const response = await axiosInstance.get("/group");
+  console.log(response.data.groups);
   return response.data.groups;
 }
 
