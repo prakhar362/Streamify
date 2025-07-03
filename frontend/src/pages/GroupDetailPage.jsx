@@ -130,61 +130,75 @@ const GroupDetailPage = () => {
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center bg-base-100">
-      {/* Header */}
-      <div className="w-full max-w-3xl px-4 pt-6 pb-2 border-b sticky top-0 z-10 bg-white">
-        <div className="flex items-center justify-between gap-4">
-          <div className="flex items-center gap-4 min-w-0">
-            <div className="avatar size-12 rounded-full bg-primary text-primary-content flex items-center justify-center">
-              <UsersIcon className="size-6" />
-            </div>
-            <div className="min-w-0">
-              <h2 className="text-xl font-bold truncate">{group.groupName}</h2>
-              <p className="text-xs text-muted-foreground">
-                {group.members.length} members • {group.members.length} online
-              </p>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <Link
-              to={`/call/${group._id}`}
-              className="rounded-full bg-orange-400 hover:bg-orange-500 p-2 text-white"
-              title="Start Video Call"
-            >
-              <VideoIcon className="size-5" />
-            </Link>
-            <button
-              onClick={() => setShowAddModal(true)}
-              className="btn btn-outline btn-sm flex items-center gap-1"
-              title="Add User"
-            >
-              <UserPlusIcon className="size-4" />
-              Add
-            </button>
-          </div>
-        </div>
-        {group.desc && (
-          <div className="mt-2 text-sm text-muted-foreground truncate">
-            {group.desc}
-          </div>
-        )}
-      </div>
-
-      {/* Chat UI */}
-      <div className="w-full max-w-3xl flex-1 px-4 py-8">
+    <div className="flex flex-col flex-1 h-full w-full min-h-0 min-w-0">
+      <div className="bg-white h-full w-full rounded-none shadow-none border-none flex-1 flex flex-col min-h-0 min-w-0">
         <Chat client={chatClient} theme="messaging light">
           <Channel channel={channel}>
             <Window>
-              <ChannelHeader />
-              <MessageList />
-              <MessageInput />
+              {/* ⬇️ Your Custom Header INSIDE the chat UI */}
+              <div className="flex items-center justify-between gap-4 p-4 border-b bg-white">
+                <div className="flex items-center gap-4 min-w-0">
+                  <div className="avatar size-12 rounded-full bg-primary text-primary-content flex items-center justify-center">
+                    <UsersIcon className="size-6" />
+                  </div>
+                  <div className="min-w-0">
+                    <h2 className="text-xl font-bold truncate">{group.groupName}</h2>
+                    <div className="flex items-center gap-1 mt-1">
+                      {/* Member Avatars */}
+                      {group.members.slice(0, 5).map((member) => (
+                        <div
+                          key={member._id}
+                          className="avatar size-6 border-2 border-white -ml-2 first:ml-0"
+                          title={member.fullName}
+                          style={{ zIndex: 10 }}
+                        >
+                          <img
+                            src={member.profilePic}
+                            alt={member.fullName}
+                            className="rounded-full object-cover"
+                          />
+                        </div>
+                      ))}
+                      {/* Show "+N" if more members */}
+                      {group.members.length > 5 && (
+                        <div className="avatar size-6 border-2 border-white -ml-2 bg-gray-200 flex items-center justify-center text-xs font-semibold text-gray-700">
+                          +{group.members.length - 5}
+                        </div>
+                      )}
+                      <span className="text-xs text-muted-foreground ml-2">
+                        {group.members.length} members • {group.members.length} online
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <Link
+                    to={`/call/${group._id}`}
+                    className="rounded-full bg-orange-400 hover:bg-orange-500 p-2 text-white"
+                    title="Start Video Call"
+                  >
+                    <VideoIcon className="size-5" />
+                  </Link>
+                  <button
+                    onClick={() => setShowAddModal(true)}
+                    className="btn btn-outline btn-sm flex items-center gap-1"
+                    title="Add User"
+                  >
+                    <UserPlusIcon className="size-4" />
+                    Add User
+                  </button>
+                </div>
+              </div>
+
+              <div className="flex-1 flex flex-col min-h-0">
+                <MessageList />
+                <MessageInput />
+              </div>
             </Window>
           </Channel>
         </Chat>
       </div>
-
-      {/* Add Friends Modal */}
       {showAddModal && (
         <div className="fixed inset-0 z-50 bg-black/40 flex items-center justify-center">
           <div className="bg-white rounded-xl shadow-lg w-full max-w-md p-6 relative">
@@ -194,9 +208,9 @@ const GroupDetailPage = () => {
             >
               <XIcon className="w-5 h-5" />
             </button>
-            <h3 className="text-lg font-semibold mb-4">Add Friends to Group</h3>
+            <h3 className="text-lg font-semibold text-black mb-4">Add Friends to Group</h3>
             {eligibleFriends.length === 0 ? (
-              <p className="text-sm text-muted-foreground">
+              <p className="text-sm text-black text-muted-foreground">
                 All your friends are already in this group.
               </p>
             ) : (
@@ -215,18 +229,23 @@ const GroupDetailPage = () => {
                           className="rounded-full"
                         />
                       </div>
-                      <div className="flex-1 font-semibold">{friend.fullName}</div>
+                      <div className="flex-1">
+                        <div className="font-semibold text-black">{friend.fullName}</div>
+                      </div>
                       <button
                         className={`btn btn-sm ${alreadySent ? "btn-disabled" : "btn-primary"}`}
                         onClick={() =>
-                          sendRequestMutation({ friendId: friend._id, groupId: group._id })
+                          sendRequestMutation({
+                            friendId: friend._id,
+                            groupId: group._id,
+                          })
                         }
                         disabled={alreadySent || isPending}
                       >
                         {alreadySent ? (
                           <>
                             <CheckCircleIcon className="size-4 mr-1" />
-                            Sent
+                            Invite Sent
                           </>
                         ) : (
                           <>
