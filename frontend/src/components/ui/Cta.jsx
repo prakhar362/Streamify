@@ -32,7 +32,7 @@ const Cta = () => (
        Join Thousands Already Chatting on Streamify.Whether you're learning a new language or building your next big idea — find your crew and grow together.
       </p>
       <Button className="px-8 md:px-10 py-3 md:py-4 rounded-full hover:bg-gray-700 hover:text-black  text-white text-base md:text-lg font-semibold" asChild>
-        <Link to="/home">Start Now</Link>
+        <Link to="/login">Start Now</Link>
       </Button>
     </div>
     {/* Right: Responsive Puzzle Image Grid */}

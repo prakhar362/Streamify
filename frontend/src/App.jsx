@@ -53,7 +53,7 @@ function App() {
       }}
     />
     <Routes>
-      <Route path='/' element={<LandingPage />}/>
+      <Route path='/' element={<LandingPage />} />
 
       <Route path='/login'  element={
             !isAuthenticated ? <Login /> : <Navigate to={isOnboarded ? "/home" : "/onboarding"} />

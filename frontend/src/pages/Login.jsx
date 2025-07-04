@@ -28,7 +28,7 @@ const Login = () => {
           <div className="mb-4 flex items-center justify-start gap-2">
             <ShipWheelIcon className="size-9 text-[#3498db]" />
             <span className="text-3xl font-bold font-mono bg-clip-text text-transparent bg-gradient-to-r from-[#3498db] to-[#3498db] tracking-wider">
-              Streamify
+              <Link to="/">Streamify</Link>
             </span>
           </div>
 
