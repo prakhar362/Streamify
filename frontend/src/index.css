@@ -2,8 +2,6 @@
 @plugin "daisyui" {
   themes: all;
 }
-
-
 .str-chat__channel {
   display: flex;
   align-items: center;

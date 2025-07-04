@@ -19,8 +19,8 @@ export const TestimonialsColumn = (props) => {
         {[...new Array(2).fill(0).map((_, index) => (
           <React.Fragment key={index}>
             {props.testimonials.map(({ text, image, name, role }, i) => (
-              <div className="p-10 rounded-3xl border shadow-lg shadow-primary/10 max-w-xs w-full" key={i}>
-                <div>{text}</div>
+              <div className="p-10 rounded-3xl border-black border shadow-lg shadow-primary/10 max-w-xs w-full" key={i}>
+                <div  className="text-black">{text}</div>
                 <div className="flex items-center gap-2 mt-5">
                   <img
                     width={40}
@@ -30,8 +30,8 @@ export const TestimonialsColumn = (props) => {
                     className="h-10 w-10 rounded-full"
                   />
                   <div className="flex flex-col">
-                    <div className="font-medium tracking-tight leading-5">{name}</div>
-                    <div className="leading-5 opacity-60 tracking-tight">{role}</div>
+                    <div className="font-medium tracking-tight text-black leading-5">{name}</div>
+                    <div className="leading-5 opacity-60 tracking-tight text-gray-900">{role}</div>
                   </div>
                 </div>
               </div>
@@ -116,12 +116,12 @@ const Testimonials = () => {
           className="flex flex-col items-center justify-center max-w-[540px] mx-auto"
         >
           <div className="flex justify-center">
-            <div className="border py-1 px-4 rounded-lg">Testimonials</div>
+            <div className="border py-1 px-4 rounded-lg text-black">Testimonials</div>
           </div>
-          <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold tracking-tighter mt-5">
+          <h2 className="text-xl sm:text-2xl md:text-3xl text-gray-950 lg:text-4xl xl:text-5xl font-bold tracking-tighter mt-5">
             What our users say
           </h2>
-          <p className="text-center mt-5 opacity-75">
+          <p className="text-center mt-5 opacity-75 text-gray-800">
             See what our customers have to say about us.
           </p>
         </motion.div>

@@ -5,7 +5,7 @@ import Testimonials from "../components/ui/testimonials";
 function LandingPage() {
   return (
     <>
-    <div className="bg-white">
+    <div className="bg-white" >
        <HeroSection />
      <FeaturesSectionWithHoverEffects/>
      <Testimonials/>
