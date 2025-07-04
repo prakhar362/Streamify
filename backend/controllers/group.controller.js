@@ -1,4 +1,4 @@
-import User from "../models/user.js";
+
 import Group from "../models/Group.js";
 import GroupRequest from "../models/GroupRequest.js";
 import { StreamChat } from 'stream-chat';

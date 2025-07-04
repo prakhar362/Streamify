@@ -1,5 +1,5 @@
 import bcrypt from "bcryptjs";
-import User from "../models/user.js";
+import User from "../models/User.js";
 import { upsertStreamUser } from "../lib/stream.js";
 import {z} from 'zod';
 import jwt from "jsonwebtoken";
