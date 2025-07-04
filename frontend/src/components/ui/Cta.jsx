@@ -4,19 +4,19 @@ import { Button } from './button';
 const slides = [
   {
     title: "Zucchini & Squash",
-    image: "https://images.unsplash.com/photo-1502741338009-cac2772e18bc?auto=format&fit=crop&w=400&q=80",
+    image: "https://media.istockphoto.com/id/1226737565/photo/colleagues-talk-online-from-their-homes.jpg?s=612x612&w=0&k=20&c=utq5LneU9im0qi63FdifEVqmuN5iEjhKBikpgpkD_vg=",
   },
   {
     title: "Feijoa",
-    image: "https://images.unsplash.com/photo-1541857754-557a44522bec?auto=format&fit=crop&w=400&q=80",
+    image: "https://cdsassets.apple.com/live/7WUAS350/images/ios/ios-17-iphone-14-pro-messages-group-imessage.png",
   },
   {
     title: "Strawberry",
-    image: "https://images.unsplash.com/photo-1623227866882-c005c26dfe41?auto=format&fit=crop&w=400&q=80",
+    image: "https://www.fluentu.com/blog/wp-content/uploads/2023/10/Language-Learning-Plan.jpg",
   },
   {
     title: "Purple Cauliflower",
-    image: "https://images.unsplash.com/photo-1620053927547-cf64d4829ff4?auto=format&fit=crop&w=400&q=80",
+    image: "https://internal-blog.contentstudio.io/wp-content/uploads/2023/03/Friend-Request.png",
   },
 ];
 
@@ -28,10 +28,10 @@ const Cta = () => (
       <h1 className="text-5xl md:text-7xl font-bold bg-gradient-to-r from-teal-500 to-blue-700 bg-clip-text text-transparent mt-2 mb-8">Streamify</h1>
       
       <p className="text-base md:text-lg text-gray-700 mb-8 mt-8">
-        Explore a vibrant harvest of organic, seasonal fruits and vegetables, bursting with flavors. Unveil a paramount selection of naturally delicious and nutritious premium produce sourced directly from local farms!
+       Join Thousands Already Chatting on Streamify.Whether you're learning a new language or building your next big idea — find your crew and grow together.
       </p>
       <Button className="px-8 md:px-10 py-3 md:py-4 rounded-full hover:bg-gray-700 hover:text-black  text-white text-base md:text-lg font-semibold" onClick={() => console.log('Main button clicked for LTR')}>
-        Shop Now
+        Start Now
       </Button>
     </div>
     {/* Right: Responsive Puzzle Image Grid */}

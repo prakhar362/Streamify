@@ -2,33 +2,35 @@ import { cn } from "../../lib/utils";
 import {
   IconAdjustmentsBolt,
   IconCloud,
-  IconCurrencyDollar,
   IconEaseInOut,
   IconHeart,
   IconHelp,
   IconRouteAltLeft,
-  IconTerminal2,
+  IconBubbleText,
+  IconShieldLockFilled,
+  IconUserCircle
+
 } from "@tabler/icons-react";
 
 export function FeaturesSectionWithHoverEffects() {
   const features = [
     {
-      title: "Built for developers",
+      title: "Real-Time Chat",
       description:
-        "Built for engineers, developers, dreamers, thinkers and doers.",
-      icon: <IconTerminal2 />,
+        "Instant messaging with zero delay, powered by GetStream.io.",
+      icon: <IconBubbleText />,
     },
     {
-      title: "Ease of use",
+      title: "Community Groups",
       description:
-        "It's as easy as using an Apple, and as expensive as buying one.",
+        "Join public or private groups based on your interests — from tech to art, and more.",
       icon: <IconEaseInOut />,
     },
     {
-      title: "Pricing like no other",
+      title: "Secure & Private",
       description:
-        "Our prices are best in the market. No cap, no lock, no credit card required.",
-      icon: <IconCurrencyDollar />,
+        "End-to-end secure architecture ensures your conversations stay safe.",
+      icon: <IconShieldLockFilled />,
     },
     {
       title: "100% Uptime guarantee",
@@ -36,9 +38,9 @@ export function FeaturesSectionWithHoverEffects() {
       icon: <IconCloud />,
     },
     {
-      title: "Multi-tenant Architecture",
-      description: "You can simply share passwords instead of buying new seats",
-      icon: <IconRouteAltLeft />,
+      title: "Custom Avatars & Profiles",
+      description: "Express yourself with custom avatars, bios, and language preferences.",
+      icon: <IconUserCircle />,
     },
     {
       title: "24/7 Customer Support",
@@ -47,9 +49,9 @@ export function FeaturesSectionWithHoverEffects() {
       icon: <IconHelp />,
     },
     {
-      title: "Money back guarantee",
+      title: "Works Everywhere",
       description:
-        "If you donot like EveryAI, we will convince you to like us.",
+        "Optimized for both mobile and desktop. Never miss a moment.",
       icon: <IconAdjustmentsBolt />,
     },
     {

@@ -53,7 +53,7 @@ const testimonials = [
   {
     text: "Implementing this ERP was smooth and quick. The customizable, user-friendly interface made team training effortless.",
     image: "https://randomuser.me/api/portraits/men/2.jpg",
-    name: "Bilal Ahmed",
+    name: "Arjun Ramesh",
     role: "IT Manager",
   },
   {
@@ -65,19 +65,19 @@ const testimonials = [
   {
     text: "This ERP's seamless integration enhanced our business operations and efficiency. Highly recommend for its intuitive interface.",
     image: "https://randomuser.me/api/portraits/men/4.jpg",
-    name: "Omar Raza",
+    name: "Ozark Raza",
     role: "CEO",
   },
   {
     text: "Its robust features and quick support have transformed our workflow, making us significantly more efficient.",
     image: "https://randomuser.me/api/portraits/women/5.jpg",
-    name: "Zainab Hussain",
+    name: "Zara Tindall",
     role: "Project Manager",
   },
   {
     text: "The smooth implementation exceeded expectations. It streamlined processes, improving overall business performance.",
     image: "https://randomuser.me/api/portraits/women/6.jpg",
-    name: "Aliza Khan",
+    name: "Alice Lbr",
     role: "Business Analyst",
   },
   {
@@ -89,13 +89,13 @@ const testimonials = [
   {
     text: "They delivered a solution that exceeded expectations, understanding our needs and enhancing our operations.",
     image: "https://randomuser.me/api/portraits/women/8.jpg",
-    name: "Sana Sheikh",
+    name: "Vamika Chakraborty",
     role: "Sales Manager",
   },
   {
     text: "Using this ERP, our online presence and conversions significantly improved, boosting business performance.",
     image: "https://randomuser.me/api/portraits/men/9.jpg",
-    name: "Hassan Ali",
+    name: "Zun Heing",
     role: "E-commerce Manager",
   },
 ];
