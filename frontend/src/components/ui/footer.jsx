@@ -16,7 +16,7 @@ function Footerdemo() {
   const [isChatOpen, setIsChatOpen] = React.useState(false)
 
   return (
-    <footer className="relative border-t bg-background text-foreground transition-colors duration-300">
+    <footer className="relative border-t text-black bg-background text-foreground transition-colors duration-300">
       <div className="container mx-auto px-4 py-12 md:px-6 lg:px-8">
         <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-4">
           <div className="relative">
@@ -24,18 +24,18 @@ function Footerdemo() {
             <p className="mb-6 text-muted-foreground">
               Join our newsletter for the latest updates and exclusive offers.
             </p>
-            <form className="relative">
+            <form className="flex items-center gap-2 bg-white rounded-lg border px-2 py-1 w-full max-w-xs shadow">
               <Input
                 type="email"
                 placeholder="Enter your email"
-                className="pr-12 backdrop-blur-sm"
+                className="flex-1 border-none shadow-none focus:ring-0 focus:outline-none bg-transparent text-gray-900"
               />
               <Button
                 type="submit"
                 size="icon"
-                className="absolute right-1 top-1 h-8 w-8 rounded-full bg-primary text-primary-foreground transition-transform hover:scale-105"
+                className="rounded-full bg-black text-white hover:bg-zinc-800 flex items-center justify-center w-10 h-10"
               >
-                <Send className="h-4 w-4" />
+                <Send className="h-5 w-5" />
                 <span className="sr-only">Subscribe</span>
               </Button>
             </form>
@@ -44,19 +44,19 @@ function Footerdemo() {
           <div>
             <h3 className="mb-4 text-lg font-semibold">Quick Links</h3>
             <nav className="space-y-2 text-sm">
-              <a href="#" className="block transition-colors hover:text-primary">
+              <a href="#" className="block transition-colors hover:text-gray-950">
                 Home
               </a>
-              <a href="#" className="block transition-colors hover:text-primary">
+              <a href="#" className="block transition-colors hover:text-gray-950">
                 About Us
               </a>
-              <a href="#" className="block transition-colors hover:text-primary">
+              <a href="#" className="block transition-colors hover:text-gray-950">
                 Services
               </a>
-              <a href="#" className="block transition-colors hover:text-primary">
+              <a href="#" className="block transition-colors hover:text-gray-950">
                 Products
               </a>
-              <a href="#" className="block transition-colors hover:text-primary">
+              <a href="#" className="block transition-colors hover:text-gray-950">
                 Contact
               </a>
             </nav>
@@ -67,7 +67,7 @@ function Footerdemo() {
               <p>123 Innovation Street</p>
               <p>Tech City, TC 12345</p>
               <p>Phone: (123) 456-7890</p>
-              <p>Email: hello@example.com</p>
+              <p>Email: streamify@gmail.com</p>
             </address>
           </div>
           <div className="relative">
@@ -76,9 +76,9 @@ function Footerdemo() {
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <Button variant="outline" size="icon" className="rounded-full">
-                      <Facebook className="h-4 w-4" />
-                      <span className="sr-only">Facebook</span>
+                    <Button variant="outline" size="icon" className="rounded-full hover:bg-black hover:text-white">
+                      <Facebook className="h-4 w-4 " />
+                      <span className="sr-only ">Facebook</span>
                     </Button>
                   </TooltipTrigger>
                   <TooltipContent>
@@ -89,8 +89,8 @@ function Footerdemo() {
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <Button variant="outline" size="icon" className="rounded-full">
-                      <Twitter className="h-4 w-4" />
+                    <Button variant="outline" size="icon" className="rounded-full  hover:bg-black hover:text-white">
+                      <Twitter className="h-4 w-4 " />
                       <span className="sr-only">Twitter</span>
                     </Button>
                   </TooltipTrigger>
@@ -102,8 +102,8 @@ function Footerdemo() {
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <Button variant="outline" size="icon" className="rounded-full">
-                      <Instagram className="h-4 w-4" />
+                    <Button variant="outline" size="icon" className="rounded-full  hover:bg-black hover:text-white">
+                      <Instagram className="h-4 w-4 " />
                       <span className="sr-only">Instagram</span>
                     </Button>
                   </TooltipTrigger>
@@ -115,8 +115,8 @@ function Footerdemo() {
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <Button variant="outline" size="icon" className="rounded-full">
-                      <Linkedin className="h-4 w-4" />
+                    <Button variant="outline" size="icon" className="rounded-full  hover:bg-black  hover:text-white">
+                      <Linkedin className="h-4 w-4 " />
                       <span className="sr-only">LinkedIn</span>
                     </Button>
                   </TooltipTrigger>
@@ -130,7 +130,7 @@ function Footerdemo() {
         </div>
         <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t pt-8 text-center md:flex-row">
           <p className="text-sm text-muted-foreground">
-            © 2024 Your Company. All rights reserved.
+            © 2024 Prakhar Shrivastava. All rights reserved.
           </p>
           <nav className="flex gap-4 text-sm">
             <a href="#" className="transition-colors hover:text-primary">
