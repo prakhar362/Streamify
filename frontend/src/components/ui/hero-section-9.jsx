@@ -6,10 +6,10 @@ import { Menu, X } from 'lucide-react';
 import heroImg from '../../assets/image.png';
 
 const menuItems = [
-    { name: 'Features', to: '#' },
-    { name: 'Testimonials', to: '#' },
-    { name: 'Discover', to: '#' },
-    { name: 'About', to: '#' },
+    { name: 'Features', to: '#features' },
+    { name: 'Testimonials', to: '#testimonials' },
+    { name: 'Discover', to: '#discover' },
+    { name: 'About', to: '#about' },
 ];
 
 export const HeroSection = () => {

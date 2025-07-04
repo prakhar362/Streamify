@@ -1,5 +1,6 @@
 import React from 'react';
 import { Button } from './button';
+import { Link } from 'react-router-dom';
 
 const slides = [
   {
@@ -21,7 +22,7 @@ const slides = [
 ];
 
 const Cta = () => (
-  <section className="w-full max-w-6xl mx-auto py-16 px-4 flex flex-col md:flex-row items-center justify-between gap-10">
+  <section className="w-full max-w-6xl mx-auto py-16 px-4 flex flex-col md:flex-row items-center justify-between gap-10" id='discover'>
     {/* Left: Text */}
     <div className="flex-1 min-w-[280px] max-w-xl w-full mb-15 md:mb-0">
       <span className="text-lg font-semibold text-gray-700">Discover</span>
@@ -30,8 +31,8 @@ const Cta = () => (
       <p className="text-base md:text-lg text-gray-700 mb-8 mt-8">
        Join Thousands Already Chatting on Streamify.Whether you're learning a new language or building your next big idea — find your crew and grow together.
       </p>
-      <Button className="px-8 md:px-10 py-3 md:py-4 rounded-full hover:bg-gray-700 hover:text-black  text-white text-base md:text-lg font-semibold" onClick={() => console.log('Main button clicked for LTR')}>
-        Start Now
+      <Button className="px-8 md:px-10 py-3 md:py-4 rounded-full hover:bg-gray-700 hover:text-black  text-white text-base md:text-lg font-semibold" asChild>
+        <Link to="/home">Start Now</Link>
       </Button>
     </div>
     {/* Right: Responsive Puzzle Image Grid */}
