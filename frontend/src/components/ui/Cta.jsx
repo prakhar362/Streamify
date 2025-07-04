@@ -23,14 +23,14 @@ const slides = [
 const Cta = () => (
   <section className="w-full max-w-6xl mx-auto py-16 px-4 flex flex-col md:flex-row items-center justify-between gap-10">
     {/* Left: Text */}
-    <div className="flex-1 min-w-[280px] max-w-xl w-full mb-10 md:mb-0">
+    <div className="flex-1 min-w-[280px] max-w-xl w-full mb-15 md:mb-0">
       <span className="text-lg font-semibold text-gray-700">Discover</span>
-      <h1 className="text-5xl md:text-7xl font-bold bg-gradient-to-r from-teal-500 to-blue-700 bg-clip-text text-transparent mt-2">Freshness</h1>
-      <hr className="w-24 md:w-32 h-1 bg-blue-700 border-0 my-6 md:my-8" />
-      <p className="text-base md:text-lg text-gray-700 mb-8">
+      <h1 className="text-5xl md:text-7xl font-bold bg-gradient-to-r from-teal-500 to-blue-700 bg-clip-text text-transparent mt-2 mb-8">Streamify</h1>
+      
+      <p className="text-base md:text-lg text-gray-700 mb-8 mt-8">
         Explore a vibrant harvest of organic, seasonal fruits and vegetables, bursting with flavors. Unveil a paramount selection of naturally delicious and nutritious premium produce sourced directly from local farms!
       </p>
-      <Button className="px-8 md:px-10 py-3 md:py-4 rounded-full text-base md:text-lg font-semibold" onClick={() => console.log('Main button clicked for LTR')}>
+      <Button className="px-8 md:px-10 py-3 md:py-4 rounded-full hover:bg-gray-700 hover:text-black  text-white text-base md:text-lg font-semibold" onClick={() => console.log('Main button clicked for LTR')}>
         Shop Now
       </Button>
     </div>
