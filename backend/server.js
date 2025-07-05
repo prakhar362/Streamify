@@ -18,6 +18,8 @@ app.use(cookieParser());
 app.use(
   cors({
     origin: ["https://streamify-nu-bay.vercel.app", "http://localhost:5173"],
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
     credentials: true, // allow frontend to send cookies
   })
 );

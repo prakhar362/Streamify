@@ -11,6 +11,7 @@ const signupSchema= z.object({
 
 export async function Signup(req,res){
     const {fullName , email, password }=req.body;
+    console.log("Signup request received:", { fullName, email });
     try {
         if(!fullName || !email || !password)
     {
@@ -34,6 +35,8 @@ export async function Signup(req,res){
         password:hashedPassword,
     })
 
+    console.log("User created:", newUser._id, "isOnboarded:", newUser.isOnboarded);
+
     try {
       await upsertStreamUser({
         id: newUser._id.toString(),
@@ -52,12 +55,12 @@ export async function Signup(req,res){
     res.cookie("jwt", token, {
       maxAge: 7 * 24 * 60 * 60 * 1000,
       httpOnly: true, // prevent XSS attacks,
-      sameSite: "strict", // prevent CSRF attacks
+      sameSite: "lax", // allow cross-site requests for login
       secure: process.env.NODE_ENV === "production",
     });
 
-
-    return res.status(200).json({ message: "Signed up" });
+    console.log("Sending signup response with user data");
+    return res.status(200).json({ success: true, user: newUser });
         
     } catch (error) {
         console.error("Signup Error: ",error);
@@ -69,6 +72,7 @@ export async function Signup(req,res){
 export async function Login(req, res) {
   try {
     const { email, password } = req.body;
+    console.log("Login request received:", { email });
 
     if (!email || !password) {
       return res.status(400).json({ message: "All fields are required" });
@@ -80,6 +84,8 @@ export async function Login(req, res) {
     const isPasswordCorrect = await bcrypt.compareSync(password,user.password);
     if (!isPasswordCorrect) return res.status(401).json({ message: "Invalid email or password" });
 
+    console.log("User logged in:", user._id, "isOnboarded:", user.isOnboarded);
+
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET_KEY, {
       expiresIn: "7d",
     });
@@ -87,10 +93,11 @@ export async function Login(req, res) {
     res.cookie("jwt", token, {
       maxAge: 7 * 24 * 60 * 60 * 1000,
       httpOnly: true, // prevent XSS attacks,
-      sameSite: "strict", // prevent CSRF attacks
+      sameSite: "lax", // allow cross-site requests for login
       secure: process.env.NODE_ENV === "production",
     });
 
+    console.log("Sending login response with user data");
     res.status(200).json({ success: true, user });
   } catch (error) {
     console.log("Error in login controller", error.message);

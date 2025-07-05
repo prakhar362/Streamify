@@ -1,16 +1,27 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
 import { signup } from "../lib/api";
 
 const useSignUp = () => {
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
   const { mutate, isPending, error } = useMutation({
     mutationFn: signup,
-    onSuccess: () => {
-      // Add a small delay to ensure the cookie is set before checking auth
+    onSuccess: (data) => {
+      console.log("Signup successful:", data);
+      // Add a delay to ensure the cookie is set and auth state is updated
       setTimeout(() => {
         queryClient.invalidateQueries({ queryKey: ["authUser"] });
-      }, 100);
+        // Navigate based on user onboarding status
+        if (data.user?.isOnboarded) {
+          console.log("User is onboarded, navigating to /home");
+          navigate("/home");
+        } else {
+          console.log("User is not onboarded, navigating to /onboarding");
+          navigate("/onboarding");
+        }
+      }, 500); // Increased delay to 500ms
     },
   });
 
