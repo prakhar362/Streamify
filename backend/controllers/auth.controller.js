@@ -52,12 +52,16 @@ export async function Signup(req,res){
       expiresIn: "7d",
     });
 
-    res.cookie("jwt", token, {
+    const cookieOptions = {
       maxAge: 7 * 24 * 60 * 60 * 1000,
       httpOnly: true, // prevent XSS attacks,
       sameSite: "lax", // allow cross-site requests for login
-      secure: process.env.NODE_ENV === "production",
-    });
+      secure: true, // always use secure cookies for HTTPS
+    };
+
+    console.log("Setting cookie with options:", cookieOptions);
+
+    res.cookie("jwt", token, cookieOptions);
 
     console.log("Sending signup response with user data");
     return res.status(200).json({ success: true, user: newUser });
@@ -90,12 +94,16 @@ export async function Login(req, res) {
       expiresIn: "7d",
     });
 
-    res.cookie("jwt", token, {
+    const cookieOptions = {
       maxAge: 7 * 24 * 60 * 60 * 1000,
       httpOnly: true, // prevent XSS attacks,
       sameSite: "lax", // allow cross-site requests for login
-      secure: process.env.NODE_ENV === "production",
-    });
+      secure: true, // always use secure cookies for HTTPS
+    };
+
+    console.log("Setting cookie with options:", cookieOptions);
+
+    res.cookie("jwt", token, cookieOptions);
 
     console.log("Sending login response with user data");
     res.status(200).json({ success: true, user });

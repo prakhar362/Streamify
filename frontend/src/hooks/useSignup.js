@@ -10,18 +10,16 @@ const useSignUp = () => {
     mutationFn: signup,
     onSuccess: (data) => {
       console.log("Signup successful:", data);
-      // Add a delay to ensure the cookie is set and auth state is updated
-      setTimeout(() => {
-        queryClient.invalidateQueries({ queryKey: ["authUser"] });
-        // Navigate based on user onboarding status
-        if (data.user?.isOnboarded) {
-          console.log("User is onboarded, navigating to /home");
-          navigate("/home");
-        } else {
-          console.log("User is not onboarded, navigating to /onboarding");
-          navigate("/onboarding");
-        }
-      }, 500); // Increased delay to 500ms
+      // Navigate immediately based on user onboarding status
+      if (data.user?.isOnboarded) {
+        console.log("User is onboarded, navigating to /home");
+        navigate("/home");
+      } else {
+        console.log("User is not onboarded, navigating to /onboarding");
+        navigate("/onboarding");
+      }
+      
+      // Don't invalidate auth query immediately - let the target page handle it
     },
   });
 

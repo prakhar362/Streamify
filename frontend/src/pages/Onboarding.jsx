@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import useAuthUser from "../hooks/useAuthUser";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
@@ -7,23 +8,40 @@ import { LoaderIcon, MapPinIcon, ShipWheelIcon, CameraIcon, ShuffleIcon } from "
 import { LANGUAGES } from "../constants";
 
 const Onboarding = () => {
-  const { authUser } = useAuthUser();
+  const { authUser, isLoading } = useAuthUser();
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
   const [formState, setFormState] = useState({
-    fullName: authUser?.fullName || "",
-    bio: authUser?.bio || "",
-    nativeLanguage: authUser?.nativeLanguage || "",
-    learningLanguage: authUser?.learningLanguage || "",
-    location: authUser?.location || "",
-    profilePic: authUser?.profilePic || "",
+    fullName: "",
+    bio: "",
+    nativeLanguage: "",
+    learningLanguage: "",
+    location: "",
+    profilePic: "",
   });
+
+  // Update form state when authUser becomes available
+  useEffect(() => {
+    if (authUser) {
+      setFormState({
+        fullName: authUser.fullName || "",
+        bio: authUser.bio || "",
+        nativeLanguage: authUser.nativeLanguage || "",
+        learningLanguage: authUser.learningLanguage || "",
+        location: authUser.location || "",
+        profilePic: authUser.profilePic || "",
+      });
+    }
+  }, [authUser]);
 
   const { mutate: onboardingMutation, isPending } = useMutation({
     mutationFn: completeOnboarding,
-    onSuccess: () => {
+    onSuccess: (data) => {
       toast.success("Profile onboarded successfully");
       queryClient.invalidateQueries({ queryKey: ["authUser"] });
+      // Navigate to home after successful onboarding
+      navigate("/home");
     },
     onError: (error) => {
       toast.error(error.response.data.message);
@@ -41,6 +59,18 @@ const Onboarding = () => {
     setFormState({ ...formState, profilePic: randomAvatar });
     toast.success("Random profile picture generated!");
   };
+
+  // Show loading state while auth is being checked
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="flex items-center gap-2">
+          <LoaderIcon className="animate-spin size-6" />
+          <span>Loading...</span>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen max-w-full flex items-center justify-center p-4 bg-[#f6fafd]">
@@ -93,6 +123,7 @@ const Onboarding = () => {
                 onChange={(e) => setFormState({ ...formState, fullName: e.target.value })}
                 className="input input-bordered w-full"
                 placeholder="Your full name"
+                required
               />
             </div>
 
@@ -107,6 +138,7 @@ const Onboarding = () => {
                 onChange={(e) => setFormState({ ...formState, bio: e.target.value })}
                 className="textarea textarea-bordered w-full h-20"
                 placeholder="Tell others about yourself and your language learning goals"
+                required
               />
             </div>
 
@@ -122,6 +154,7 @@ const Onboarding = () => {
                   value={formState.nativeLanguage}
                   onChange={(e) => setFormState({ ...formState, nativeLanguage: e.target.value })}
                   className="select select-bordered w-full"
+                  required
                 >
                   <option value="">Select your native language</option>
                   {LANGUAGES.map((lang) => (
@@ -141,6 +174,7 @@ const Onboarding = () => {
                   value={formState.learningLanguage}
                   onChange={(e) => setFormState({ ...formState, learningLanguage: e.target.value })}
                   className="select select-bordered w-full"
+                  required
                 >
                   <option value="">Select language you're learning</option>
                   {LANGUAGES.map((lang) => (
@@ -166,6 +200,7 @@ const Onboarding = () => {
                   onChange={(e) => setFormState({ ...formState, location: e.target.value })}
                   className="input input-bordered w-full pl-10"
                   placeholder="City, Country"
+                  required
                 />
               </div>
             </div>
@@ -204,4 +239,5 @@ const Onboarding = () => {
     </div>
   );
 };
+
 export default Onboarding;
