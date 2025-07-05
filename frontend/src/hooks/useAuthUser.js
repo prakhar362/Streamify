@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 const useAuthUser = () => {
   const { pathname } = useLocation();
   const [shouldEnableAuth, setShouldEnableAuth] = useState(false);
+  const [tempUser, setTempUser] = useState(null);
   
   // Check if we're on pages where auth check should be skipped initially
   const shouldSkipAuthCheck = pathname === '/' || 
@@ -32,9 +33,21 @@ const useAuthUser = () => {
     enabled: shouldEnableAuth, // Enable based on state
   });
 
+  // Clear temp user when auth query becomes available
+  useEffect(() => {
+    if (authUser.data?.user && tempUser) {
+      console.log("Auth query available, clearing temp user");
+      setTempUser(null);
+    }
+  }, [authUser.data?.user, tempUser]);
+
+  // Use tempUser if available, otherwise use authUser
+  const currentUser = tempUser || authUser.data?.user;
+
   return { 
     isLoading: shouldSkipAuthCheck ? false : authUser.isLoading, 
-    authUser: authUser.data?.user 
+    authUser: currentUser,
+    setTempUser // Export this to be used by login/signup hooks
   };
 };
 export default useAuthUser;
