@@ -6,7 +6,12 @@ const useSignUp = () => {
 
   const { mutate, isPending, error } = useMutation({
     mutationFn: signup,
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["authUser"] }),
+    onSuccess: () => {
+      // Add a small delay to ensure the cookie is set before checking auth
+      setTimeout(() => {
+        queryClient.invalidateQueries({ queryKey: ["authUser"] });
+      }, 100);
+    },
   });
 
   return { isPending, error, signupMutation: mutate };
