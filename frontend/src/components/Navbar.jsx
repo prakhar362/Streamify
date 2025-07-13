@@ -1,4 +1,4 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import useAuthUser from "../hooks/useAuthUser";
 import { BellIcon, LogOutIcon, ShipWheelIcon, SearchIcon, PanelRight } from "lucide-react";
 import ThemeSelector from "./ThemeSelector";
@@ -8,6 +8,8 @@ const Navbar = ({ onSidebarToggle, isSidebarOpen,showSidebar }) => {
   const { authUser } = useAuthUser();
   const location = useLocation();
   const isChatPage = location.pathname?.startsWith("/chat");
+  const { logoutMutation } = useLogout();
+  const navigate = useNavigate();
 
   // const queryClient = useQueryClient();
   // const { mutate: logoutMutation } = useMutation({
@@ -15,9 +17,9 @@ const Navbar = ({ onSidebarToggle, isSidebarOpen,showSidebar }) => {
   //   onSuccess: () => queryClient.invalidateQueries({ queryKey: ["authUser"] }),
   // });
 
-  logoutMutation(undefined, {
-  onSuccess: () => navigate("/login"),
-});
+  // const logoutMutation(undefined, {
+  //   onSuccess: () => navigate("/login"),
+  // });
 
 
   return (
@@ -90,7 +92,7 @@ const Navbar = ({ onSidebarToggle, isSidebarOpen,showSidebar }) => {
 
               <button 
   className="btn btn-ghost btn-circle hover:bg-error/10 hover:text-error transition-all duration-200 group" 
-  onClick={() => logoutMutation()} // 🔥 call it here
+  onClick={() => logoutMutation(undefined, { onSuccess: () => navigate("/login") })} // 🔥 call it here
   title="Logout"
 >
   <LogOutIcon className="h-5 w-5 group-hover:scale-110 transition-transform duration-200" />
