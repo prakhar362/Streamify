@@ -15,7 +15,10 @@ const Navbar = ({ onSidebarToggle, isSidebarOpen,showSidebar }) => {
   //   onSuccess: () => queryClient.invalidateQueries({ queryKey: ["authUser"] }),
   // });
 
-  const { logoutMutation } = useLogout();
+  logoutMutation(undefined, {
+  onSuccess: () => navigate("/login"),
+});
+
 
   return (
     <nav className="bg-base-100/80 backdrop-blur-lg border-b border-base-300 sticky top-0 z-30 h-16 flex items-center shadow-sm">
@@ -85,14 +88,14 @@ const Navbar = ({ onSidebarToggle, isSidebarOpen,showSidebar }) => {
                 </div>
               </div>
 
-              {/* LOGOUT BUTTON */}
               <button 
-                className="btn btn-ghost btn-circle hover:bg-error/10 hover:text-error transition-all duration-200 group" 
-                onClick={logoutMutation}
-                title="Logout"
-              >
-                <LogOutIcon className="h-5 w-5 group-hover:scale-110 transition-transform duration-200" />
-              </button>
+  className="btn btn-ghost btn-circle hover:bg-error/10 hover:text-error transition-all duration-200 group" 
+  onClick={() => logoutMutation()} // 🔥 call it here
+  title="Logout"
+>
+  <LogOutIcon className="h-5 w-5 group-hover:scale-110 transition-transform duration-200" />
+</button>
+
             </div>
           </div>
         </div>

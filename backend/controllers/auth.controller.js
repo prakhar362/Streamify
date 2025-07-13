@@ -112,9 +112,13 @@ const cookieOptions = {
     res.status(500).json({ message: "Internal Server Error" });
   }
 }
-
 export function Logout(req, res) {
-  res.clearCookie("jwt");
+  res.clearCookie("jwt", {
+    httpOnly: true,
+    sameSite: "None", // 🔥 must match how the cookie was set
+    secure: true      // 🔥 must match how the cookie was set
+  });
+
   res.status(200).json({ success: true, message: "Logout successful" });
 }
 
