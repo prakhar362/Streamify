@@ -55,7 +55,7 @@ export async function Signup(req,res){
     const cookieOptions = {
       maxAge: 7 * 24 * 60 * 60 * 1000,
       httpOnly: true, // prevent XSS attacks,
-      sameSite: "lax", // allow cross-site requests for login
+      sameSite: "None", // allow cross-site requests for login
       secure: true, // always use secure cookies for HTTPS
     };
 
@@ -93,13 +93,13 @@ export async function Login(req, res) {
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET_KEY, {
       expiresIn: "7d",
     });
+const cookieOptions = {
+  maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+  httpOnly: true,                 // prevent XSS
+  sameSite: "None",               // 🔥 REQUIRED for cross-origin cookies
+  secure: true,                   // 🔥 REQUIRED when using HTTPS (Render)
+};
 
-    const cookieOptions = {
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-      httpOnly: true, // prevent XSS attacks,
-      sameSite: "lax", // allow cross-site requests for login
-      secure: true, // always use secure cookies for HTTPS
-    };
 
     console.log("Setting cookie with options:", cookieOptions);
 
