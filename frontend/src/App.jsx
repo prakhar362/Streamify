@@ -82,16 +82,21 @@ function App() {
               <Navigate to={!isAuthenticated ? "/login" : "/onboarding"} />
             )
         }/>
+<Route
+  path="/call/:id"
+  element={
+    isLoading ? (
+      <PageLoader />
+    ) : isAuthenticated && isOnboarded ? (
+      <Layout showSidebar={false}>
+        <CallPage />
+      </Layout>
+    ) : (
+      <Navigate to={!isAuthenticated ? "/login" : "/onboarding"} />
+    )
+  }
+/>
 
-      <Route path='/call/:id'  element={
-            isAuthenticated && isOnboarded ? (
-              <Layout showSidebar={false}>
-                <CallPage />
-              </Layout>
-            ) : (
-              <Navigate to={!isAuthenticated ? "/login" : "/onboarding"} />
-            )
-          }/>
 
           
       <Route path='/chat/:id'  element={
