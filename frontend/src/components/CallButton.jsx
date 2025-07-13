@@ -1,9 +1,9 @@
 import { VideoIcon } from "lucide-react";
 
-function CallButton({ handleVideoCall }) {
+function CallButton({ onClick }) {
   return (
     <button 
-      onClick={handleVideoCall} 
+      onClick={onClick} // ✅ Fix: use onClick
       className="btn btn-circle btn-primary shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105 group"
       title="Start Video Call"
     >
