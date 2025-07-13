@@ -1,39 +1,40 @@
 import { useQuery } from "@tanstack/react-query";
 import { useLocation } from "react-router-dom";
 import { getAuthUser } from "../lib/api";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 const useAuthUser = () => {
   const { pathname } = useLocation();
   const [shouldEnableAuth, setShouldEnableAuth] = useState(false);
   const [tempUser, setTempUser] = useState(null);
-  
-  // Check if we're on pages where auth check should be skipped initially
-  const shouldSkipAuthCheck = pathname === '/' || 
-                             pathname === '/login' || 
-                             pathname === '/signup';
-  
-  // Enable auth check after a delay for onboarding and home pages
+
+  const shouldSkipAuthCheck =
+    pathname === "/" || pathname === "/login" || pathname === "/signup";
+
   useEffect(() => {
-    if (pathname === '/onboarding' || pathname === '/home') {
+    if (pathname === "/onboarding" || pathname === "/home") {
       const timer = setTimeout(() => {
         setShouldEnableAuth(true);
-      }, 2000); // 2 second delay
-      
+      }, 2000); // Delay for smoother UX
+
       return () => clearTimeout(timer);
     } else {
       setShouldEnableAuth(!shouldSkipAuthCheck);
     }
   }, [pathname, shouldSkipAuthCheck]);
-  
+
+  // Force auth check manually (e.g., after login)
+  const forceAuthCheck = useCallback(() => {
+    setShouldEnableAuth(true);
+  }, []);
+
   const authUser = useQuery({
     queryKey: ["authUser"],
     queryFn: getAuthUser,
-    retry: false, // auth check
-    enabled: shouldEnableAuth, // Enable based on state
+    retry: false,
+    enabled: shouldEnableAuth,
   });
 
-  // Clear temp user when auth query becomes available
   useEffect(() => {
     if (authUser.data?.user && tempUser) {
       console.log("Auth query available, clearing temp user");
@@ -41,13 +42,14 @@ const useAuthUser = () => {
     }
   }, [authUser.data?.user, tempUser]);
 
-  // Use tempUser if available, otherwise use authUser
   const currentUser = tempUser || authUser.data?.user;
 
-  return { 
-    isLoading: shouldSkipAuthCheck ? false : authUser.isLoading, 
+  return {
+    isLoading: shouldSkipAuthCheck ? false : authUser.isLoading,
     authUser: currentUser,
-    setTempUser // Export this to be used by login/signup hooks
+    setTempUser,
+    forceAuthCheck, // 🔥 this is new
   };
 };
+
 export default useAuthUser;

@@ -6,17 +6,23 @@ import useAuthUser from "./useAuthUser";
 const useSignUp = () => {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
-  const { setTempUser } = useAuthUser();
+  const { setTempUser, forceAuthCheck } = useAuthUser();
 
   const { mutate, isPending, error } = useMutation({
     mutationFn: signup,
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
       console.log("Signup successful:", data);
-      
-      // Set temp user data for immediate routing
+
+      // Set temp user for immediate UI access
       setTempUser(data.user);
-      
-      // Navigate immediately based on user onboarding status
+
+      // Enable /auth/me check immediately
+      forceAuthCheck();
+
+      // Refetch auth state to sync with backend
+      await queryClient.invalidateQueries({ queryKey: ["authUser"] });
+
+      // Navigate based on onboarding status
       if (data.user?.isOnboarded) {
         console.log("User is onboarded, navigating to /home");
         navigate("/home");
@@ -24,11 +30,13 @@ const useSignUp = () => {
         console.log("User is not onboarded, navigating to /onboarding");
         navigate("/onboarding");
       }
-      
-      // Don't invalidate auth query immediately - let the target page handle it
+    },
+    onError: (err) => {
+      console.error("Signup error:", err);
     },
   });
 
   return { isPending, error, signupMutation: mutate };
 };
+
 export default useSignUp;
