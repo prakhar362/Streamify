@@ -97,10 +97,13 @@ const CallPage = () => {
 const CallContent = () => {
   const { useCallCallingState } = useCallStateHooks();
   const callingState = useCallCallingState();
-
   const navigate = useNavigate();
 
-  if (callingState === CallingState.LEFT) return navigate("/home");
+  useEffect(() => {
+    if (callingState === CallingState.LEFT) {
+      navigate("/home");
+    }
+  }, [callingState, navigate]);
 
   return (
     <StreamTheme>

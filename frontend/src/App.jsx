@@ -87,15 +87,26 @@ function App() {
   element={
     isLoading ? (
       <PageLoader />
-    ) : isAuthenticated && isOnboarded ? (
-      <Layout showSidebar={false}>
-        <CallPage />
-      </Layout>
+    ) : authUser ? (
+      authUser.isOnboarded ? (
+        <>
+          {console.log("✅ User is authenticated and onboarded. Rendering CallPage.")}
+          <Layout showSidebar={false}>
+            <CallPage />
+          </Layout>
+        </>
+      ) : (
+        <>
+          {console.log("⚠️ User authenticated but not onboarded. Redirecting to /onboarding")}
+          <Navigate to="/onboarding" />
+        </>
+      )
     ) : (
-      <Navigate to={!isAuthenticated ? "/login" : "/onboarding"} />
+      <PageLoader /> // Wait instead of redirecting immediately
     )
   }
 />
+
 
 
           
